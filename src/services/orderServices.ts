@@ -88,7 +88,7 @@ export const updateOrder = async (id: string, order: orderUpdateType) => {
   const updatedOrder = await Order.findByIdAndUpdate(
     { _id: id },
     {
-      buyer: existingOrder.buyer._id,
+      buyer: (existingOrder.buyer as { _id: string })._id,
       products: products && products.length > 0 ? products : existingOrder.products,
       payment: payment || existingOrder.payment,
       status: status || existingOrder.status,
