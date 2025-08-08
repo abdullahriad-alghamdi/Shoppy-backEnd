@@ -30,15 +30,21 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 // Setup allowed origins for CORS
-const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [];
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', dev.corsOrigin)
+  res.header('Access-Control-Allow-Credentials', 'true')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+
+  connectDB() // connect mongo database
+  next()
+})
+
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: dev.corsOrigin,
     credentials: true,
   })
 )
-
-connectDB(); // connect mongo database
 
 // Use routes
 app.use('/public', express.static('public'))
